@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Inert loading</title>
+</head>
+<body>
+	<button>提交</button>
+	<script>
+		// 惰性载入
+		var addEvent = function(obj,type,fn){
+			if (window.addEventListener) {
+				addEvent = function(obj,type,fn){
+					obj.addEventListener(type,fn, false);
+				}
+			}else {                                //Ie9一下的低级浏览器
+				if (!obj.evens) {
+					obj.evens = {};
+				}
+				if (!obj.evens["on"+type]) {
+					obj.evens["on"+type]= [];
+					obj.evens["on"+type][0] = fn;
+				}
+				if (addEvent.shield(obj.evens["on"+type]) == true) {
+					return false;
+				}
+				obj.evens["on"+type].push(fn);
+				obj["on"+type] = function(e){
+					var e = ev || window.event;
+					for (var i = 0; i < obj.evens["on"+type].length; i++) {
+						obj.evens["on"+type][i].call(this, e);
+					}
+				};
+			}
+			addEvent(obj,type,fn);
+		};
+		addEvent.shield =function(types,fn){
+			for (var i in types) {
+				if (types[i] ==fn) {
+					return true;
+				}
+			}
+			return false;
+		};
+		// 单例
+		var getSingle = (function(){
+			var obj;
+			return function(fn){
+				return obj || (obj = fn.apply(this, arguments));	
+			}
+		})();
+		var addDiv = function(){
+			var div = document.createElement("div");
+			div.innerHTML = "我是单例";
+			div.style.background = 'bule';
+			div.style.display = 'none';
+			document.body.appendChild(div);
+			return div;
+		};
+		addEvent(window,"load",function(){
+			addEvent(document.getElementsByTagName('button')[0],"click",function(){
+				var div = getSingle(addDiv);
+				div.style.display = 'block';
+			});
+		});
+	</script>
+</body>
+</html>

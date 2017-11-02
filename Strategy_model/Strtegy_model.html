@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<div id="div" style="width: 200px;height: 150px;background: red; position: absolute;left: 500px;"></div>
+	<script>
+		// 策略模式从定义上可以理解为封装算法的
+		//这里是一个封装年终奖的算法
+		var strategies = {          
+			"S" : function(salary){
+				return salary * 4;
+			},
+			"A" : function(salary){
+				return salary * 3;
+			},
+			"B" : function(salary){
+				return salary * 2;
+			}
+		};
+		var calculateBonus = function(level,salary){
+			return strategies[level](salary);       //返回调用的strategies方法的值
+		};
+		console.log(calculateBonus("S",2000));
+		console.log(calculateBonus("A",10000));
+		// 这里是一个动画的算法封装
+		var tween = {    //返回动画每次的动作
+			linear : function(t,b,c,d){
+				return c * t / d + b;
+			},
+			easeIn : function(t,b,c,d){
+				return c * (t /= d) * t + b;
+			},
+			sineseOut : function(t,b,c,d){
+				return c * ((t = t / d -1) * t * t + 1) + b;
+			},
+		};
+		var Animate = function(dom){
+			this.dom = dom;         //进行动画的节点
+			this.startTime = 0;		//动画开始的时间
+			this.startPos = 0;		//动画开始的位置
+			this.endPos = 0;        //动画目标的位置
+			this.propertyName = null;   //动画改变的css属性
+			this.easing = null;       //动画的算法
+			this.duration = null;      //动画持续时间
+		};
+		Animate.prototype.start = function(propertyName,endPos,duration,easing){
+			this.startTime = new Date();  //动画开始时间
+			this.startPos = this.dom.getBoundingClientRect()[propertyName];   //动画开始时的样式位置
+			this.propertyName  = propertyName;       //动画要改变的css样式
+			this.endPos = endPos;					//动画的目标位置
+			this.duration = duration;				//动画维持时间
+			this.easing = tween[easing];			//动画的算法
+			var self = this;
+			var timeId = setInterval(function(){
+				if (self.step() === false) {
+					clearInterval(timeId);
+				}
+			}, 20)
+		};
+		Animate.prototype.step = function(){
+			var t = new Date();     //获取当前时间
+			if (t - this.startTime > this.duration) {
+				this.update(this.endPos);
+				return false;
+			}
+			var pos = this.easing(t - this.startTime,this.startPos,this.endPos - this.startPos,this.duration);
+			this.update(pos);	//动画每次执行改变css样式
+		};
+		Animate.prototype.update = function(pos){
+			this.dom.style[this.propertyName] = pos + 'px';
+		};
+		var div = document.getElementById("div");
+		var animation = new Animate(div);
+		animation.start("left",0,1000,"sineseOut");
+		// animation.start("top",500,1000,"easeIn");
+	</script>
+</body>
+</html>
