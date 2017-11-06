@@ -13,35 +13,37 @@
 				addEvent = function(obj,type,fn){
 					obj.addEventListener(type,fn, false);
 				}
-			}else {                                //Ie9一下的低级浏览器
-				if (!obj.evens) {
-					obj.evens = {};
-				}
-				if (!obj.evens["on"+type]) {
-					obj.evens["on"+type]= [];
-					obj.evens["on"+type][0] = fn;
-				}
-				if (addEvent.shield(obj.evens["on"+type]) == true) {
-					return false;
-				}
-				obj.evens["on"+type].push(fn);
-				obj["on"+type] = function(e){
-					var e = ev || window.event;
-					for (var i = 0; i < obj.evens["on"+type].length; i++) {
-						obj.evens["on"+type][i].call(this, e);
-					}
-				};
+			}else { 
+				// if (typeof obj.evens == "undefined") {
+				// 	obj.evens = {};
+				// }
+				// if (typeof obj.evens[type] == "undefined") {
+				// 	obj.evens[type]= [];
+				// 	obj.evens[type][0] = fn;
+				// }
+				// if (addEvent.shield(obj.evens[type]) == true) {
+				// 	return false;
+				// }
+				// // alert(obj.evens[type]);
+				// obj.evens[type].push(fn);
+				// obj["on"+type] = function(e){
+				// 	var e = e || window.event;
+				// 	for (var i = 0; i < obj.evens[type].length; i++) {
+				// 		obj.evens[type][i].call(this, e);
+				// 	}
+				// };
+				alert("你浏览器版本过低！请升级您的浏览器");
 			}
-			addEvent(obj,type,fn);
+			return addEvent(obj,type,fn);
 		};
-		addEvent.shield =function(types,fn){
-			for (var i in types) {
-				if (types[i] ==fn) {
-					return true;
-				}
-			}
-			return false;
-		};
+		// addEvent.shield =function(types,fn){
+		// 	for (var i in types) {
+		// 		if (types[i] == fn) {
+		// 			return true;
+		// 		}
+		// 	}
+		// 	return false;
+		// };
 		// 单例
 		var getSingle = (function(){
 			var obj;
@@ -52,7 +54,7 @@
 		var addDiv = function(){
 			var div = document.createElement("div");
 			div.innerHTML = "我是单例";
-			div.style.background = 'bule';
+			div.style.color = 'bule';
 			div.style.display = 'none';
 			document.body.appendChild(div);
 			return div;

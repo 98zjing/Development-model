@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vscode color picker</title>
+</head>
+<body>
+    <script>
+        // 迭代器是指提供一种方法顺序访问一个聚和对象中的各个元素，而又不需要暴露该对象的内部表示
+        // 内部迭代器
+        // var each = function(obj,fn){
+        //     for(var i = 0; i < obj.length; i++){
+        //         fn.call(obj[i],obj[i]);
+        //     }
+        // };
+        // each([1,2,3,2,3,3,2],function(obj){
+        //     alert(obj); 
+        // });
+        // 外部迭代器
+        var Iterator = function(obj){
+            var i = 0;
+            var next = function(){
+                i = i +1;
+            }
+            var isDone = function(){
+                return i>obj.length;
+            };
+            var getCurrItem =function(){
+                return obj[i];
+            };
+            return {
+                next : next,
+                isDone : isDone,
+                getCurrItem : getCurrItem,
+                length:obj.length
+            }
+        };
+        // var chilss =Iterator([1,23,3,4,3]);
+        // for (var i = 0; i < chilss.length; i++) { 
+        //     alert(chilss.getCurrItem());
+        //     chilss.next();
+        // }
+        var args1 = Iterator({
+            "name|":1,
+            "age":2
+        });
+        var args2 = Iterator({
+            "name":1,
+            "ss":3,
+            "sq":1
+        });
+        alert(args2[length]);
+        var comare = function(num1,hum2){
+            if (num1.length == hum2.length) {
+                for (var i = 0; i < num1.length; i++) {
+                    if(num1.getCurrItem() != hum2.getCurrItem()){
+                        return alert(num1 + "不等于" + hum2);
+                    }
+                    num1.next();
+                    hum2.next();
+                }
+            }else {
+                return alert(num1 + "不等于" + hum2);
+            }
+            return alert(num1 + "等于" + hum2);
+        }
+        comare(args1,args2);
+    </script>
+</body>
+</html>
