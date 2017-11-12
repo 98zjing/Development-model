@@ -83,7 +83,7 @@
 									}
 									offlineStack = null;
 								},
-								one: function(key,fn.last){
+								one: function(key,fn,last){
 									_remove(key,cache);
 									this.listen(key,fn,last);
 								},
@@ -127,7 +127,7 @@
 						trigger:function(key,fn,last){
 							var event = this.create();
 								event.trigger.apply(this,arguments);
-						};
+						}
 					}
 				};
 			return Event();
