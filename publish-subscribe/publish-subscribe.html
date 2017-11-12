@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>publish-subscribe</title>
+</head>
+<body>
+	<h2>必须要订阅后才能发布</h2>
+	<h4>订阅人</h4>
+	订阅的房间类型
+	<select name="" id="text-user">
+		<option value="输人订阅的房间类型">输人订阅的房间类型</option>
+		<option value="a">a</option>
+		<option value="b">b</option>
+	</select>
+	<button id="user-btn">提交</button>
+	取消订阅的房间类型
+	<select name="" id="remover-user">
+		<option value="输人取消订阅的房间类型">输人取消订阅的房间类型</option>
+		<option value="a">a</option>
+		<option value="b">b</option>
+	</select>
+	<button id="remover-btn">提交</button>
+
+	<h4>发布人</h4>
+	<select name="" id="text">
+		<option value="请选择您要出售的房间类型">请选择您要出售的房间类型</option>
+		<option value="a">a</option>
+		<option value="b">b</option>
+	</select>
+	<input type="text" placeholder="输入您出售的价格" id="text-1">
+	<button  id="text-btn">提交</button>
+	<!-- 发布订阅模式又叫观察者模式，它定义对象间的一种一对多的依赖关系，当一一个对象的状态发生改变时，所有依赖与它的对象的到通知 -->
+	<script>
+		// 发布订阅模式封装
+		var event = {
+			clientList:[],
+			listen:function(key,fn){
+				if (!this.clientList[key]) {
+					this.clientList[key] = [];
+				}
+				this.clientList[key].push(fn);
+			},
+			trigger:function(){
+				var key = Array.prototype.shift.call(arguments);
+				fns  = this.clientList[key];
+				if (!fns || fns.length === 0) {
+					return false;
+				}
+				console.log(key + "长度" + fns.length);
+				for (var i = 0,fn;fn = fns[i++];) {
+					fn.apply(this,arguments);
+				}
+			}
+		};
+		event.remove = function(key,fn){   //取消相应的订阅事件
+			var fns = this.clientList[key];
+			if (!fns) {                  //如果没有相应的事件就直接返回
+				return false;
+			}
+			if (!fn) {
+				 this.clientList[key] = [];					//如果没有fn就表示取消所有的订阅事件
+				fns && fns.length == 0;
+			}else {                     //查找要取消的订阅事件
+				for (var i = fns.length; i >= 0; i--) {
+					var _fn =fns[i];
+					if (_fn == fn) {
+						fns.splice(i, 1);
+					}
+				}
+			}
+		};
+		var installEvent = function(obj){
+			for (var i in event) {
+				obj[i] = event[i];
+			}
+		};
+		var salesOffices = {};
+		installEvent(salesOffices);
+		document.getElementById("user-btn").onclick = function(){
+			var obj = document.getElementById("text-user");
+			var index= document.getElementById("text-user").selectedIndex;
+			salesOffices.listen(obj[index].value, function(price){
+				console.log(obj[index].value+"价格为：" + price);
+			});
+		};
+		document.getElementById("text-btn").onclick = function(){
+			var obj = document.getElementById("text");
+			var index = document.getElementById("text").selectedIndex;
+			salesOffices.trigger(obj[index].value ,document.getElementById("text-1").value);
+		}
+		document.getElementById('remover-btn').onclick = function(){
+			var obj = document.getElementById("remover-user");
+			var index = document.getElementById("text").selectedIndex;
+			salesOffices.remove(obj[index].value);
+		};
+	</script>
+</body>
+</html>

@@ -42,31 +42,39 @@
         //     alert(chilss.getCurrItem());
         //     chilss.next();
         // }
-        var args1 = Iterator({
-            "name|":1,
-            "age":2
-        });
-        var args2 = Iterator({
-            "name":1,
-            "ss":3,
-            "sq":1
-        });
-        alert(args2[length]);
+        var args1 = Iterator([{
+        	naem:3
+        },{
+        	name:2
+        }]);
+        var args2 = Iterator([3,3,2]);
+        alert(args1.length);
         var comare = function(num1,hum2){
             if (num1.length == hum2.length) {
                 for (var i = 0; i < num1.length; i++) {
                     if(num1.getCurrItem() != hum2.getCurrItem()){
-                        return alert(num1 + "不等于" + hum2);
+                        return console.log( num1 + "不等于" + hum2);
                     }
                     num1.next();
                     hum2.next();
                 }
             }else {
-                return alert(num1 + "不等于" + hum2);
+                return console.log(num1 + "不等于" + hum2);
             }
-            return alert(num1 + "等于" + hum2);
+            return console.log(num1 + "等于" + hum2);
         }
         comare(args1,args2);
+        //倒叙迭代器
+        var reverseEach = function(num,fn){
+        	for(var i = num.length;i >= 0; i--){
+        		fn.apply(this,arguments);
+        		num.getCurrItem();
+        		num.next();
+        	}
+        }
+        reverseEach(args2,function(){
+        	console.log(args2.getCurrItem);
+        });
     </script>
 </body>
 </html>
