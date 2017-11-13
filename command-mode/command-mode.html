@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>command-mode1</title>
+</head>
+<body>
+	<button id="button1">刷新</button>
+	<button id="button2">添加</button>
+	<button id="button3">删除</button>
+	<script>
+		var button1 = document.getElementById("button1");
+		var button2 = document.getElementById("button2");
+		var button3 = document.getElementById("button3");
+		var setCommand = function(button,command){
+			button.onclick = function(){
+				command.execute();
+			};
+		};
+		var MenuBar = {
+			refresh: function(){
+				console.log("刷新菜单");
+			}
+		};
+		var subMenu = {
+			add : function(){
+				console.log("添加子菜单");
+			},
+			del:function(){
+				console.log("删除子菜单");
+			}
+		};
+		var RefreshMenuBarCommand = function(receiver){
+			this.receiver = receiver;
+		}; 
+		RefreshMenuBarCommand.prototype.execute = function(){
+			this.receiver.refresh();
+		};
+		var AddSubMenuCommand = function(receiver){
+			this.receiver = receiver;
+		};
+		AddSubMenuCommand.prototype.execute = function(){
+			this.receiver.add();
+		};
+		var DelSubMenuCommnad = function(receiver){
+			this.receiver = receiver;
+		};
+		DelSubMenuCommnad.prototype.execute = function(){
+			this.receiver.del();
+		};
+		var refreshMenuBarCommand = new RefreshMenuBarCommand(MenuBar);
+		var addSubMenuCommand = new AddSubMenuCommand(subMenu);
+		var delSubMenuCommnad = new DelSubMenuCommnad(subMenu);
+
+		setCommand(button1,refreshMenuBarCommand);     //按钮1 的功能是刷新
+		setCommand(button2,addSubMenuCommand);     //按钮1 的功能是添加子菜单
+		setCommand(button3,delSubMenuCommnad);     //按钮1 的功能是删除
+	</script>
+</body>
+</html>
